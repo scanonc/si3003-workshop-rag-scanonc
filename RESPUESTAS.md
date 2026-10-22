@@ -218,6 +218,48 @@ Se propone inicialmente un umbral de 0.45 porque los scores máximos de las tres
 Este valor permite separar los cinco casos evaluados: los documentos principales de las preguntas respondibles superan el umbral y los resultados de las preguntas fuera de contexto quedan por debajo. Sin embargo, es un umbral inicial basado en una muestra pequeña y debe validarse con más preguntas.
 
 **Conclusión:** Los scores permiten distinguir, en estos cinco ejemplos, las preguntas respondibles de las preguntas fuera de contexto. El umbral propuesto ayuda a filtrar documentos poco relevantes, pero no garantiza que todas las preguntas futuras se clasifiquen correctamente.
+
+---
+
+## C5 — MMR frente a similitud pura
+
+Se añadieron dos retrievers para recuperar cinco chunks:
+
+```python
+similarity_retriever = vectorstore.as_retriever(
+    search_type="similarity",
+    search_kwargs={"k": 5},
+)
+
+mmr_retriever = vectorstore.as_retriever(
+    search_type="mmr",
+    search_kwargs={"k": 5, "fetch_k": 20, "lambda_mult": 0.5},
+)
+```
+
+La celda C5 imprime los chunks recuperados por ambas estrategias para tres preguntas.
+También calcula la cobertura como la cantidad de títulos distintos y la redundancia
+como los chunks que repiten un título ya recuperado. Después de ejecutar la celda,
+se deben copiar los seis valores impresos en esta tabla:
+
+| Pregunta | Similitud pura: cobertura | Similitud pura: redundancia | MMR: cobertura | MMR: redundancia |
+|---|---:|---:|---:|---:|
+| ¿Cuántos días por semana pueden trabajar remotamente los empleados? | [anotar] | [anotar] | [anotar] | [anotar] |
+| ¿Qué deben completar los nuevos empleados durante la primera semana? | [anotar] | [anotar] | [anotar] | [anotar] |
+| ¿Qué normas existen sobre seguridad y reporte de incidentes? | [anotar] | [anotar] | [anotar] | [anotar] |
+
+### Conclusión
+
+MMR ayuda más en preguntas amplias o cuando varios chunks contienen información muy
+parecida: intercambia algunos resultados casi idénticos por fragmentos de documentos
+distintos, aumentando la cobertura del contexto. Esto reduce el riesgo de llenar el
+prompt con repeticiones y puede aportar información complementaria.
+
+MMR puede empeorar en preguntas muy específicas, donde el fragmento más relevante y
+sus repeticiones contienen precisamente la respuesta correcta. Al penalizar la
+redundancia, puede reemplazar una confirmación muy pertinente por un chunk menos
+relacionado. Por eso conviene usar similitud pura para consultas puntuales y MMR para
+consultas amplias, exploratorias o con riesgo de recuperar contenido repetido.
 ||
 
 
@@ -242,3 +284,48 @@ El modelo de embeddings transforma los documentos y las preguntas en vectores nu
 ## 5. ¿Qué cambiarías para llevar este prototipo a producción?
 
 Primero, implementaría persistencia para conservar los documentos y el índice vectorial entre ejecuciones, evitando reconstruirlos cada vez. También agregaría control de acceso, evaluación periódica con preguntas de prueba y observabilidad para registrar latencia, errores, documentos recuperados y calidad de las respuestas. Finalmente, establecería límites de uso y seguimiento de costos para controlar el consumo de las API, junto con medidas para proteger los datos y evitar que el modelo responda con información no respaldada por las fuentes.
+
+## Persistencia local de Qdrant
+
+Se reemplazó el cliente en memoria por un cliente persistente:
+
+```python
+QDRANT_PATH = "qdrant_data"
+qdrant_client = QdrantClient(path=QDRANT_PATH)
+```
+
+`build_pipeline` comprueba si la colección ya existe. Solo calcula la dimensión,
+crea la colección y ejecuta `add_documents` cuando `reindex=True` o cuando la
+colección todavía no existe. En una ejecución posterior, abre la colección
+existente y conserva los embeddings sin volver a indexar.
+
+### Tabla de tiempos
+
+Ejecuté la celda de medición después de crear el índice y después de reabrir la
+colección:
+
+| Operación | Tiempo (s) | Resultado |
+|---|---:|---|
+| Indexar y persistir embeddings | [anotar] | [anotar] |
+| Reabrir colección existente | [anotar] | [anotar] |
+
+La indexación tarda más porque divide los documentos, solicita embeddings a NVIDIA
+y escribe los vectores en Qdrant. Reabrir tarda menos porque reutiliza los vectores
+persistidos; la celda además realiza una consulta para comprobar que la colección
+responde. Para completar la prueba de reinicio, se debe reiniciar el kernel sin
+borrar la carpeta `qdrant_data`, ejecutar las celdas de configuración y documentos,
+y después ejecutar la celda de apertura sin `reindex=True`.
+
+### Qué falta para producción
+
+La persistencia local evita pagar embeddings en cada reinicio, pero no convierte por
+sí sola el prototipo en un servicio de producción:
+
+- **Concurrencia:** Qdrant local basado en archivos no sustituye un servidor con
+  control de concurrencia, límites de recursos y aislamiento entre procesos.
+- **Acceso:** faltan autenticación, autorización por usuario o departamento,
+  cifrado en tránsito y una política para proteger los documentos sensibles.
+- **Respaldos:** se necesitan copias periódicas verificadas, restauración probada,
+  versionado del corpus y un plan de recuperación ante fallos.
+- **Operación:** también faltan observabilidad, alertas, actualización controlada
+  del índice y un mecanismo para evitar que dos procesos reindexen simultáneamente.
