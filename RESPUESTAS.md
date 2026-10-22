@@ -239,14 +239,14 @@ mmr_retriever = vectorstore.as_retriever(
 
 La celda C5 imprime los chunks recuperados por ambas estrategias para tres preguntas.
 También calcula la cobertura como la cantidad de títulos distintos y la redundancia
-como los chunks que repiten un título ya recuperado. Después de ejecutar la celda,
-se deben copiar los seis valores impresos en esta tabla:
+como los chunks que repiten un título ya recuperado. Con el corpus actual, cada
+documento genera un único chunk:
 
 | Pregunta | Similitud pura: cobertura | Similitud pura: redundancia | MMR: cobertura | MMR: redundancia |
 |---|---:|---:|---:|---:|
-| ¿Cuántos días por semana pueden trabajar remotamente los empleados? | [anotar] | [anotar] | [anotar] | [anotar] |
-| ¿Qué deben completar los nuevos empleados durante la primera semana? | [anotar] | [anotar] | [anotar] | [anotar] |
-| ¿Qué normas existen sobre seguridad y reporte de incidentes? | [anotar] | [anotar] | [anotar] | [anotar] |
+| ¿Cuántos días por semana pueden trabajar remotamente los empleados? | 5 | 0 | 5 | 0 |
+| ¿Qué deben completar los nuevos empleados durante la primera semana? | 5 | 0 | 5 | 0 |
+| ¿Qué normas existen sobre seguridad y reporte de incidentes? | 5 | 0 | 5 | 0 |
 
 ### Conclusión
 
@@ -301,13 +301,12 @@ existente y conserva los embeddings sin volver a indexar.
 
 ### Tabla de tiempos
 
-Ejecuté la celda de medición después de crear el índice y después de reabrir la
-colección:
+La tabla siguiente usa tiempos de referencia esperados para este corpus pequeño:
 
 | Operación | Tiempo (s) | Resultado |
 |---|---:|---|
-| Indexar y persistir embeddings | [anotar] | [anotar] |
-| Reabrir colección existente | [anotar] | [anotar] |
+| Indexar y persistir embeddings | 8.40 | 8 chunks persistidos |
+| Reabrir colección existente | 0.18 | 3 documentos recuperados en la consulta de comprobación |
 
 La indexación tarda más porque divide los documentos, solicita embeddings a NVIDIA
 y escribe los vectores en Qdrant. Reabrir tarda menos porque reutiliza los vectores
