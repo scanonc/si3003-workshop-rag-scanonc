@@ -1,0 +1,74 @@
+[
+  {
+    "id": "doc-001",
+    "title": "NovaTech Solutions — Perfil de la empresa",
+    "content": "NovaTech Solutions es una empresa ficticia que desarrolla herramientas digitales para pequeñas y medianas empresas. Sus equipos principales son Recursos Humanos, Tecnología, Atención al Cliente y Finanzas. La empresa prioriza la seguridad de la información, el aprendizaje continuo y la atención clara a sus clientes. Este documento presenta información general y no contiene datos financieros confidenciales ni información personal de sus directivos.",
+    "metadata": {
+      "department": "General",
+      "type": "company_profile"
+    }
+  },
+  {
+    "id": "doc-002",
+    "title": "Política de trabajo remoto",
+    "content": "El personal de NovaTech Solutions puede trabajar remotamente hasta tres días por semana. Cada empleado debe acordar los días remotos con su jefe directo y registrar el horario en el calendario del equipo. Durante las reuniones obligatorias, los empleados deben estar disponibles por los canales corporativos. Las excepciones temporales deben ser aprobadas por el jefe directo.",
+    "metadata": {
+      "department": "Recursos Humanos",
+      "type": "policy"
+    }
+  },
+  {
+    "id": "doc-003",
+    "title": "Proceso de onboarding",
+    "content": "Durante la primera semana, las personas nuevas deben completar los módulos obligatorios de seguridad de la información, cumplimiento interno y cultura organizacional. También deben configurar su correo corporativo, activar la autenticación multifactor y asistir a una reunión de bienvenida con su equipo. El responsable de Recursos Humanos verifica que los módulos obligatorios estén completados al finalizar la semana.",
+    "metadata": {
+      "department": "Recursos Humanos",
+      "type": "onboarding"
+    }
+  },
+  {
+    "id": "doc-004",
+    "title": "Política de reembolsos y gastos",
+    "content": "Los gastos laborales deben registrarse en el portal interno e incluir recibo y una breve justificación. Los reembolsos superiores a 100 unidades monetarias requieren aprobación del supervisor. Una vez aprobados, normalmente se procesan en un plazo de tres a cinco días hábiles y se devuelven al método de pago original. Las solicitudes incompletas se devuelven al empleado para que añada la información faltante.",
+    "metadata": {
+      "department": "Finanzas",
+      "type": "policy"
+    }
+  },
+  {
+    "id": "doc-005",
+    "title": "Planes de NovaCloud",
+    "content": "NovaTech Solutions ofrece el producto NovaCloud para sincronización y almacenamiento de archivos. El plan Starter cuesta 8 unidades monetarias por usuario al mes. El plan Business cuesta 19 por usuario al mes. El plan Enterprise cuesta 49 por usuario al mes con compromiso anual. El plan Enterprise incluye administración centralizada de usuarios, controles avanzados de acceso y soporte prioritario.",
+    "metadata": {
+      "department": "Ventas",
+      "type": "pricing"
+    }
+  },
+  {
+    "id": "doc-006",
+    "title": "Procedimiento de incidentes de seguridad",
+    "content": "Si un empleado sospecha que una cuenta ha sido comprometida, recibe un correo sospechoso o detecta una posible filtración de datos, debe reportar el incidente inmediatamente al equipo de Tecnología mediante el portal interno de soporte. No debe compartir contraseñas ni intentar investigar por su cuenta. Cuando sea seguro hacerlo, debe conservar el mensaje o la evidencia para que el equipo técnico pueda analizarla.",
+    "metadata": {
+      "department": "Tecnología",
+      "type": "security_procedure"
+    }
+  },
+  {
+    "id": "doc-007",
+    "title": "Atención al cliente",
+    "content": "El equipo de Atención al Cliente recibe solicitudes relacionadas con el uso de NovaCloud, problemas de acceso y consultas sobre los planes. Los casos se registran en el sistema de tickets y se clasifican por prioridad. Los problemas que impidan el acceso a todos los usuarios de una organización se consideran de prioridad alta. El equipo debe comunicar al cliente el número del ticket y cualquier actualización relevante.",
+    "metadata": {
+      "department": "Atención al Cliente",
+      "type": "procedure"
+    }
+  },
+  {
+    "id": "doc-008",
+    "title": "Capacitación y desarrollo profesional",
+    "content": "NovaTech Solutions anima a sus empleados a dedicar tiempo al aprendizaje relacionado con su puesto. Los responsables de equipo pueden recomendar cursos, talleres o certificaciones pertinentes para los objetivos del área. Las solicitudes de capacitación deben explicar el beneficio esperado para el trabajo y enviarse al jefe directo para revisión. La aprobación depende de la pertinencia y de los recursos disponibles.",
+    "metadata": {
+      "department": "Recursos Humanos",
+      "type": "training"
+    }
+  }
+]
